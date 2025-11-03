@@ -140,11 +140,11 @@ export function GameUI() {
         backdropFilter: 'blur(10px)',
         zIndex: 10
       }}>
-        <CardContent style={{ padding: '15px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <h3 style={{ fontSize: '1rem', marginBottom: '10px', fontWeight: 'bold' }}>
+        <CardContent style={{ padding: '15px', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <h3 style={{ fontSize: '1rem', marginBottom: '10px', fontWeight: 'bold', flexShrink: 0 }}>
             👥 Players
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', paddingRight: '5px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', paddingRight: '5px', flex: 1, minHeight: 0 }}>
             {players.map((player, index) => (
               <div
                 key={player.id}
