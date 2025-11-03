@@ -9,7 +9,7 @@ export function SetupScreen() {
   const setupGame = useMonopoly(state => state.setupGame);
 
   const addPlayer = () => {
-    if (playerNames.length < 8) {
+    if (playerNames.length < 25) {
       setPlayerNames([...playerNames, `Player ${playerNames.length + 1}`]);
     }
   };
@@ -49,10 +49,10 @@ export function SetupScreen() {
         <CardContent>
           <div style={{ marginBottom: '20px' }}>
             <p style={{ textAlign: 'center', color: '#666', marginBottom: '20px' }}>
-              Enter player names (2-8 players)
+              Enter player names (2-25 players)
             </p>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '400px', overflowY: 'auto', paddingRight: '5px' }}>
               {playerNames.map((name, index) => (
                 <div key={index} style={{ display: 'flex', gap: '8px' }}>
                   <Input
@@ -75,7 +75,7 @@ export function SetupScreen() {
             </div>
 
             <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
-              {playerNames.length < 8 && (
+              {playerNames.length < 25 && (
                 <Button onClick={addPlayer} variant="outline" style={{ flex: 1 }}>
                   + Add Player
                 </Button>
