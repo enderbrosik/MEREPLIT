@@ -1,0 +1,62 @@
+rollDice: () => {
+      const state = get();
+      if (state.isRolling) return;
+
+      set({ isRolling: true });
+
+      setTimeout(() => {
+        const die1 = Math.floor(Math.random() * 6) + 1;
+        const die2 = Math.floor(Math.random() * 6) + 1;
+        const total = die1 + die2;
+        const isDoubles = die1 === die2;
+
+        const currentPlayer = state.players[state.currentPlayerIndex];
+        
+        if (currentPlayer.inJail) {
+          if (isDoubles) {
+            set({
+              diceValues: [die1, die2],
+              isRolling: false,
+            });
+            get().addMessage(`${currentPlayer.username} rolled doubles! Released from jail.`);
+            set(state => ({
+              players: state.players.map(p =>
+                p.id === currentPlayer.id ? { ...p, inJail: false, jailTurns: 0 } : p
+              ),
+            }));
+            get().movePlayer(currentPlayer.id, total);
+          } else {
+            const newJailTurns = currentPlayer.jailTurns + 1;
+            set({
+              diceValues: [die1, die2],
+              isRolling: false,
+              players: state.players.map(p =>
+                p.id === currentPlayer.id ? { ...p, jailTurns: newJailTurns } : p
+              ),
+            });
+            get().addMessage(`${currentPlayer.username} rolled ${total}. Still in jail (${newJailTurns}/3 turns).`);
+            if (newJailTurns >= 3) {
+              get().payJailBail(currentPlayer.id);
+            }
+          }
+        } else {
+          const newDoublesCount = isDoubles ? state.doublesCount + 1 : 0;
+          
+          set({
+            diceValues: [die1, die2],
+            isRolling: false,
+            doublesCount: newDoublesCount,
+          });
+
+          get().addMessage(`${currentPlayer.username} rolled ${die1} + ${die2} = ${total}${isDoubles ? ' (Doubles!)' : ''}`);
+
+          if (newDoublesCount === 3) {
+            get().addMessage(`${currentPlayer.username} rolled doubles 3 times! Go to Jail!`);
+            get().sendToJail(currentPlayer.id);
+            set({ doublesCount: 0 });
+          } else {
+            get().movePlayer(currentPlayer.id, total);
+          }
+        }
+      }, 1500);
+    },
